@@ -37,4 +37,5 @@ next-env.d.ts
 
 # jetbrains
 .idea/
+.output.txt
 output.txt

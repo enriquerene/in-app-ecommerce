@@ -57,25 +57,39 @@ To maintain a clean separation between UI and business logic, we utilize **Story
 
 ---
 
-## Domain-Driven Design (DDD) Structure
+## Domain-Driven Design (DDD) Structure + UI-First
 
-This project moves away from generic `components/` folders to a feature-based architecture. This allows the codebase to scale without becoming a "spaghetti code" mess.
+This project utilizes a merged **DDD + UI-First** approach. UI components are totally decoupled from business logic and developed in isolation using Storybook. Our atomic design scales from base UI elements up to domain-specific feature flows.
 
 ```bash
 src/
-├── features/                 # DDD: Logic grouped by Business Domain
-│   ├── cart/                 # Everything related to Cart
-│   │   ├── components/       # CartDrawer, CartItem (+ .stories.tsx)
-│   │   ├── hooks/            # useCart, useAddToCart (Optimistic logic)
-│   │   ├── stores/           # cart.store.ts (Zustand)
-│   │   └── types.ts
-│   ├── catalog/              # Product grids, Filtering, Sorting
-│   ├── checkout/             # Checkout forms, validation, gateways
-│   └── customer/             # Auth, Profile, Orders
-├── components/               # Shared UI Atoms (+ .stories.tsx)
-├── lib/                      # Framework configuration (Faust, Apollo)
-├── styles/                   # Global Tailwind config
-└── pages/                    # Next.js Routing (Delegates to Features)
+├── core/                        # Global Business Logic & Infrastructure
+│   ├── api/                     # WPGraphQL & Apollo Clients
+│   ├── hooks/                   # Shared business logic hooks
+│   ├── store/                   # Global state (Zustand)
+│   └── types/                   # Shared TypeScript definitions
+├── ui/                          # UI-First: Pure Design System (Logic-agnostic)
+│   ├── base/                    # Atoms: Buttons, Inputs, Icons
+│   │   └── Icon/
+│   │       ├── index.ts         # Public API
+│   │       ├── Icon.tsx         # Pure UI Component
+│   │       ├── Icon.stories.tsx # Storybook Documentation
+│   │       ├── Icon.test.tsx    # Unit Tests
+│   │       └── Icon.types.ts    # Prop Definitions
+│   ├── composed/                # Molecules & Organisms: Cards, Modals
+│   └── layout/                  # Templates: Page shells, Grids
+└── domains/                     # DDD: Feature-driven UI & Logic Wiring
+    ├── cart/                    # Cart Domain
+    │   ├── components/          # Domain UI (e.g., CartItem, CartSummary)
+    │   ├── flows/               # Domain Orchestrators (UI + Logic)
+    │   ├── hooks/               # Domain Logic (e.g., useCart)
+    │   └── store/               # Domain State (Zustand)
+    ├── catalog/                 # Product Listing, Filtering, Search
+    ├── checkout/                # Forms, Payments, Validation
+    └── customer/                # Auth, Profile, Order History
+├── lib/                         # External Libraries & Framework Configs
+├── styles/                      # Global Styles & Tailwind Config
+└── pages/                       # Next.js Routing (Delegates to Domains)
 ```
 
 ---
@@ -143,9 +157,9 @@ npm run storybook
 This hook demonstrates how we achieve "instant" feedback. We define the mutation, but update the UI via `onMutate` before the server responds.
 
 ```typescript
-// src/features/cart/hooks/useAddToCart.ts
+// src/domains/cart/hooks/useAddToCart.ts
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useCartStore } from '../stores/cart.store';
+import { useCartStore } from '../store/cart.store';
 
 export const useAddToCart = () => {
   const queryClient = useQueryClient();
@@ -187,7 +201,7 @@ export const useAddToCart = () => {
 We use `Framer Motion` to orchestrate layout changes, ensuring the user maintains spatial awareness.
 
 ```tsx
-// src/features/catalog/components/ProductCard.tsx
+// src/domains/catalog/components/ProductCard.tsx
 import { motion } from 'framer-motion';
 
 export const ProductCard = ({ product }) => {
@@ -217,10 +231,10 @@ export const ProductCard = ({ product }) => {
 
 ### C. Decoupled UI Component (Storybook)
 
-To ensure components are truly decoupled, we develop them in Storybook first. This forces us to define a clear API (Props) without relying on global state.
+To ensure components are truly decoupled, we develop them in Storybook first. This forces us to define a clear API (Props) without relying on global state or domain logic.
 
 ```tsx
-// src/components/Button.stories.tsx
+// src/ui/base/Button/Button.stories.tsx
 import type { Meta, StoryObj } from '@storybook/react';
 import { Button } from './Button';
 
