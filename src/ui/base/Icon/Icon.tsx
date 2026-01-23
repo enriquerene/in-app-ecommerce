@@ -9,6 +9,15 @@ const iconMap: Record<string, string> = {
   'chevron-right': 'lucide:chevron-right',
   plus: 'lucide:plus',
   minus: 'lucide:minus',
+  heart: 'lucide:heart',
+  comment: 'lucide:message-circle',
+  send: 'lucide:send',
+  bookmark: 'lucide:bookmark',
+  more: 'lucide:more-horizontal',
+  'arrow-left': 'lucide:arrow-left',
+  home: 'lucide:home',
+  'plus-square': 'lucide:plus-square',
+  x: 'lucide:x',
 };
 
 export const Icon: React.FC<IconProps> = ({ name, size = 24, className, color, ...props }) => {
