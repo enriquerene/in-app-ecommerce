@@ -1,12 +1,12 @@
-# Nexus Commerce - High Performance Headless PWA
+# Storegram - Instagram-like E-commerce PWA
 
 ![Status](https://img.shields.io/badge/Status-Production%20Ready-green)
-![Stack](https://img.shields.io/badge/Stack-Next.js%20%7C%20Faust.js%20%7C%20WPGraphQL-blue)
+![Stack](https://img.shields.io/badge/Stack-Next.js%20%7C%20React%20%7C%20Tailwind-blue)
 ![Performance](https://img.shields.io/badge/Lighthouse-100%2F100-success)
 
-**Nexus Commerce** is an enterprise-grade Headless E-commerce PWA designed for maximum conversion rates and sub-second interactions. It utilizes **WordPress (WooCommerce)** purely as a content and order management engine, while **Next.js** handles the presentation layer.
+**Storegram** is a high-performance E-commerce PWA designed for an Instagram-like browsing experience. It utilizes **Next.js** for the presentation layer and follows **Domain-Driven Design (DDD)** principles.
 
-This architecture solves the "Slow WooCommerce" problem by decoupling the frontend, utilizing **Optimistic UI patterns**, **Edge Caching**, and **Domain-Driven Design (DDD)** to scale development teams and traffic simultaneously.
+This architecture solves common performance bottlenecks in e-commerce by decoupling the frontend, utilizing **Optimistic UI patterns**, **Edge Caching**, and **Domain-Driven Design (DDD)** to scale development teams and traffic simultaneously.
 
 ---
 
@@ -16,16 +16,16 @@ This architecture solves the "Slow WooCommerce" problem by decoupling the fronte
 
 We do not choose between SEO and Interactivity; we use both.
 
-*   **Catalog & Products:** Rendered via **Incremental Static Regeneration (ISR)** using Faust.js. This ensures instant TTFB (Time to First Byte) and perfect SEO structure.
-*   **User State (Cart/Account):** Hydrated client-side using **TanStack Query**.
+*   **Catalog & Products:** Rendered via **Incremental Static Regeneration (ISR)** for instant TTFB (Time to First Byte) and perfect SEO structure.
+*   **User State (Cart/Account):** Hydrated client-side for personalized experiences.
 
 ### 2. Optimistic UI & State Management
 
 To prevent cart abandonment due to latency, we utilize an **Optimistic UI** pattern.
 
-*   **Logic:** When a user clicks "Add to Cart", the UI updates *instantly* via **Zustand** (Global Store). The network request to WPGraphQL happens in the background.
+*   **Logic:** When a user clicks "Add to Cart", the UI updates *instantly* via **Zustand** (Global Store). The network request to the backend happens in the background.
 *   **Fallback:** If the API fails (e.g., OOS), the UI rolls back gracefully and notifies the user.
-*   **Tech:** `Zustand` (Client State) + `TanStack Query` (Server State & Caching).
+*   **Tech:** `Zustand` (Client State) + `TanStack Query` (Server State & Caching - Planned).
 
 ### 3. Motion Design & UX
 
@@ -39,7 +39,7 @@ Motion is not decoration; it is communication. We use **Framer Motion** to provi
 To maintain a clean separation between UI and business logic, we utilize **Storybook**.
 
 *   **Isolation:** All UI components (Atoms and Feature-based) are developed in isolation. This prevents "prop drilling" and ensures components remain pure and reusable.
-*   **Logic-Free UI:** By developing in Storybook, we force the UI to be decoupled from WPGraphQL or global state management during the initial design phase.
+*   **Logic-Free UI:** By developing in Storybook, we force the UI to be decoupled from backend logic or global state management during the initial design phase.
 *   **Visual Documentation:** Storybook serves as the single source of truth for the design system, allowing for rapid prototyping without a backend.
 
 ---
@@ -47,13 +47,11 @@ To maintain a clean separation between UI and business logic, we utilize **Story
 ## Tech Stack
 
 *   **Frontend:** Next.js 16, React 19
-*   **Headless Framework:** Faust.js (handling Auth, Previews, Smart Cache)
-*   **Data Fetching:** WPGraphQL + TanStack Query (React Query)
-*   **State Management:** Zustand
-*   **Styling:** Tailwind CSS
-*   **Animation:** Framer Motion
-*   **Testing:** Jest + React Testing Library + Cypress (E2E)
-*   **UI Development:** Storybook (Isolated component development)
+*   **State Management:** Zustand (Planned)
+*   **Styling:** Tailwind CSS 4, Styled Components
+*   **Icons:** Iconify
+*   **Testing:** Vitest + React Testing Library + Playwright
+*   **UI Development:** Storybook 10
 
 ---
 
@@ -64,88 +62,58 @@ This project utilizes a merged **DDD + UI-First** approach. UI components are to
 ```bash
 src/
 ├── core/                        # Global Business Logic & Infrastructure
-│   ├── api/                     # WPGraphQL & Apollo Clients
+│   ├── api/                     # API Clients
 │   ├── hooks/                   # Shared business logic hooks
 │   ├── store/                   # Global state (Zustand)
 │   └── types/                   # Shared TypeScript definitions
+├── lib/                         # External Libraries & Utilities
 ├── ui/                          # UI-First: Pure Design System (Logic-agnostic)
 │   ├── base/                    # Atoms: Buttons, Inputs, Icons
-│   │   └── Icon/
-│   │       ├── index.ts         # Public API
-│   │       ├── Icon.tsx         # Pure UI Component
-│   │       ├── Icon.stories.tsx # Storybook Documentation
-│   │       ├── Icon.test.tsx    # Unit Tests
-│   │       └── Icon.types.ts    # Prop Definitions
-│   ├── composed/                # Molecules & Organisms: Cards, Modals
-│   └── layout/                  # Templates: Page shells, Grids
-└── domains/                     # DDD: Feature-driven UI & Logic Wiring
-    ├── cart/                    # Cart Domain
-    │   ├── components/          # Domain UI (e.g., CartItem, CartSummary)
-    │   ├── flows/               # Domain Orchestrators (UI + Logic)
-    │   ├── hooks/               # Domain Logic (e.g., useCart)
-    │   └── store/               # Domain State (Zustand)
-    ├── catalog/                 # Product Listing, Filtering, Search
-    ├── checkout/                # Forms, Payments, Validation
-    └── customer/                # Auth, Profile, Order History
-├── lib/                         # External Libraries & Framework Configs
-├── styles/                      # Global Styles & Tailwind Config
-└── pages/                       # Next.js Routing (Delegates to Domains)
+│   ├── components/              # Shared UI Components
+│   ├── composed/                # Molecules & Organisms
+│   └── layout/                  # Templates
+├── domains/                     # DDD: Feature-driven UI & Logic Wiring
+│   ├── cart/                    # Cart Domain
+│   ├── catalog/                 # Product Listing, Filtering, Search
+│   ├── checkout/                # Forms, Payments, Validation
+│   └── customer/                # Auth, Profile, Order History
+└── styles/                      # Global Styles & Tailwind Config
+app/                             # Next.js Routing (App Router)
+public/                          # Static Assets (Manifest, Icons)
 ```
 
 ---
 
 ## Setup & Installation
 
-### 1. WordPress Backend Requirements
+### 1. Project Requirements
 
-The frontend expects a specific environment on `admin.ecommerce.com`.
-
-**Required Plugins:**
-
-1.  **WooCommerce**
-2.  **WPGraphQL** (The core API)
-3.  **WPGraphQL WooCommerce** (Adds Woo Schema to GraphQL)
-4.  **FaustWP** (Handles Headless Preview & Auth)
-5.  **WPGraphQL CORS** (Critical for PWA fetch security)
-
-**Recommended Configuration:**
-
-*   Set Permalinks to `/post-name/`.
-*   Install a persistent Object Cache (Redis) on the server for GraphQL query speed.
+*   **Node.js:** 20.x or higher
+*   **Package Manager:** Yarn or NPM
 
 ### 2. Frontend Environment Variables
 
 Create a `.env.local` file in the root:
 
 ```bash
-# The URL of your WordPress installation
-NEXT_PUBLIC_WORDPRESS_URL=https://admin.ecommerce.com
-
-# The secret key for Faust.js authentication (match with WP settings)
-FAUST_SECRET_KEY=your-secure-hash
-
 # Frontend public URL
-NEXT_PUBLIC_SITE_URL=https://ecommerce.com
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
 
-# Revalidation Secret for ISR
-NEXT_PUBLIC_ISR_TOKEN=secure-token-for-webhooks
+# API URL (Optional if using mocks)
+NEXT_PUBLIC_API_URL=https://api.example.com
 ```
 
 ### 3. Running Locally
 
 ```bash
 # Install dependencies
-npm install
-
-# Generate GraphQL Types (Introspection)
-# This ensures TypeScript knows your specific Woo Schema
-npm run generate
+yarn install
 
 # Run Development Server
-npm run dev
+yarn dev
 
 # Run Storybook (Isolated UI Development)
-npm run storybook
+yarn storybook
 ```
 
 ---
@@ -166,9 +134,13 @@ export const useAddToCart = () => {
   const addToCartUI = useCartStore((state) => state.addItem); // Zustand
 
   return useMutation({
-    mutationFn: async (variables: { productId: number }) => {
-      // The actual GraphQL Mutation
-      return await client.request(ADD_TO_CART_MUTATION, variables);
+    mutationFn: async (variables: { productId: string }) => {
+      // The actual API call
+      const response = await fetch('/api/cart', {
+        method: 'POST',
+        body: JSON.stringify(variables),
+      });
+      return response.json();
     },
     onMutate: async (newItem) => {
       // 1. Cancel outgoing refetches
@@ -207,7 +179,7 @@ import { motion } from 'framer-motion';
 export const ProductCard = ({ product }) => {
   return (
     <motion.div
-      layoutId={`product-${product.slug}`} // Shared Element Transition
+      layoutId={`product-${product.id}`} // Shared Element Transition
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
@@ -215,11 +187,9 @@ export const ProductCard = ({ product }) => {
       className="group relative"
     >
       <div className="aspect-square overflow-hidden bg-gray-100 rounded-lg">
-        {/* Next/Image with Blur placeholder */}
-        <Image 
-           src={product.image.sourceUrl} 
-           alt={product.image.altText}
-           fill
+        <img 
+           src={product.imageUrl} 
+           alt={product.name}
            className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
       </div>
@@ -269,12 +239,12 @@ export const Loading: Story = {
 To minimize complexity and maximize security (PCI Compliance), we support two checkout modes, configurable via `.env`:
 
 1.  **Headless Checkout (Default):**
-    *   Uses `wpgraphql-woocommerce` mutations (`checkout`).
+    *   Uses standard checkout mutations.
     *   Form state handled by React Hook Form + Zod Validation.
     *   Payments processed via Stripe Elements or PayPal integrated directly into the React context.
 
 2.  **Native Fallback (Fail-safe):**
-    *   If the Headless API experiences downtime, the "Proceed to Checkout" button dynamically changes to a standard link: `https://admin.ecommerce.com/checkout`.
+    *   If the Headless API experiences downtime, the "Proceed to Checkout" button can dynamically change to a standard link: `https://api.yourstore.com/checkout`.
     *   This ensures the business **never** loses a sale due to frontend API issues.
 
 ---
