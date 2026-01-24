@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { SpeedInsights } from "@vercel/speed-insights/next";
-import { PWARegistration } from "@/src/ui/components/PWARegistration";
+import { 
+  PWAProvider, 
+  AnalyticsProvider, 
+  ProductProvider, 
+  ThemeProvider 
+} from "@/src/providers";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -15,13 +19,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Storegram",
+  title: "InstaShop",
   description: "Instagram-like e-commerce experience",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Storegram",
+    title: "InstaShop",
   },
   formatDetection: {
     telephone: false,
@@ -50,9 +54,15 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <PWARegistration />
-        {children}
-        <SpeedInsights />
+        <PWAProvider>
+          <AnalyticsProvider>
+            <ThemeProvider>
+              <ProductProvider>
+                {children}
+              </ProductProvider>
+            </ThemeProvider>
+          </AnalyticsProvider>
+        </PWAProvider>
       </body>
     </html>
   );

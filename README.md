@@ -1,10 +1,10 @@
-# Storegram - Instagram-like E-commerce PWA
+# InstaShop - Instagram-like E-commerce PWA
 
 ![Status](https://img.shields.io/badge/Status-Production%20Ready-green)
 ![Stack](https://img.shields.io/badge/Stack-Next.js%20%7C%20React%20%7C%20Tailwind-blue)
 ![Performance](https://img.shields.io/badge/Lighthouse-100%2F100-success)
 
-**Storegram** is a high-performance E-commerce PWA designed for an Instagram-like browsing experience. It utilizes **Next.js** for the presentation layer and follows **Domain-Driven Design (DDD)** principles.
+**InstaShop** is a high-performance E-commerce PWA designed for an Instagram-like browsing experience. It utilizes **Next.js** for the presentation layer and follows **Domain-Driven Design (DDD)** principles.
 
 This architecture solves common performance bottlenecks in e-commerce by decoupling the frontend, utilizing **Optimistic UI patterns**, **Edge Caching**, and **Domain-Driven Design (DDD)** to scale development teams and traffic simultaneously.
 
@@ -66,7 +66,8 @@ src/
 │   ├── hooks/                   # Shared business logic hooks
 │   ├── store/                   # Global state (Zustand)
 │   └── types/                   # Shared TypeScript definitions
-├── lib/                         # External Libraries & Utilities
+├── services/                    # Non-UI logic
+├── providers/                   # Bridge between services and UI
 ├── ui/                          # UI-First: Pure Design System (Logic-agnostic)
 │   ├── base/                    # Atoms: Buttons, Inputs, Icons
 │   ├── components/              # Shared UI Components

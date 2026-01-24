@@ -1,6 +1,6 @@
 {
-  "name": "Storegram",
-  "short_name": "Storegram",
+  "name": "InstaShop",
+  "short_name": "InstaShop",
   "description": "Instagram-like e-commerce experience",
   "start_url": "/",
   "display": "standalone",

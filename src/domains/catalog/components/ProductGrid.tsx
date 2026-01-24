@@ -30,7 +30,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({products}) => {
               <Overlay />
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-2 pt-6 flex flex-col justify-end">
                 <Title>{product.name}</Title>
-                <Price>${product.price.toLocaleString()}</Price>
+                <Price>{product.price}</Price>
               </div>
           </ProductCard>
         </Link>

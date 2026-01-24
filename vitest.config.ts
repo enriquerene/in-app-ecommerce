@@ -17,6 +17,16 @@ export default defineConfig({
     projects: [
       {
         plugins: [react()],
+        resolve: {
+          alias: {
+            '@': path.resolve(dirname, './'),
+            '@ui': path.resolve(dirname, './src/ui'),
+            '@providers': path.resolve(dirname, './src/providers'),
+            '@services': path.resolve(dirname, './src/services'),
+            '@core': path.resolve(dirname, './src/core'),
+            '@domains': path.resolve(dirname, './src/domains'),
+          },
+        },
         test: {
           name: 'unit',
           environment: 'jsdom',

@@ -11,8 +11,10 @@ export const MOCK_CATEGORIES = [
 export const MOCK_PRODUCTS = Array.from({ length: 21 }, (_, i) => ({
   id: `${i + 1}`,
   name: `Product ${i + 1}`,
+  slug: `product-${i + 1}`,
+  description: `Description for product ${i + 1}`,
   imageUrl: `https://picsum.photos/id/${100 + i}/400`,
-  price: 10 + ((i + 1) * 7) % 90, // Deterministic price
+  price: `$${10 + ((i + 1) * 7) % 90}`, // Deterministic price as string
 }));
 
 export const MOCK_COMMENTS = [

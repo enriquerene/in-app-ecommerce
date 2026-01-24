@@ -19,7 +19,12 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@providers/*": ["./src/providers/*"],
+      "@ui/*": ["./src/ui/*"],
+      "@services/*": ["./src/services/*"],
+      "@core/*": ["./src/core/*"],
+      "@domains/*": ["./src/domains/*"]
     }
   },
   "include": [
@@ -31,6 +36,6 @@
     "**/*.mts"
   ],
   "exclude": [
-    "my-app/node_modules"
+    "node_modules"
   ]
 }

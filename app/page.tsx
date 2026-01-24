@@ -2,21 +2,23 @@
 
 import React from "react";
 import { SearchBar, CategoryList, ProductGrid } from "@/src/domains/catalog/components";
-import { Icon } from "@/src/ui/base/Icon";
-import { MOCK_CATEGORIES, MOCK_PRODUCTS } from "@/src/domains/catalog/constants";
+import { Header, BottomNavigation } from "@/src/ui/layout";
+import { Logo } from "@/src/ui/base";
+import { InstagramProfile } from "@/src/ui/composed";
+import { MOCK_CATEGORIES } from "@/src/domains/catalog/constants";
+import { useProducts } from "@/src/domains/catalog/hooks/useProducts";
 
 export default function Home() {
+  const { products, isLoading, error } = useProducts();
+
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
       <div className="flex min-h-screen flex-col bg-white dark:bg-black max-w-md mx-auto border-x border-zinc-200 dark:border-zinc-800 relative">
       {/* Top Bar */}
-      <header className="flex items-center justify-between px-4 py-3 border-b border-zinc-100 dark:border-zinc-900 sticky top-0 bg-white dark:bg-black z-10">
-        <h1 className="text-xl font-bold tracking-tight italic">Storegram</h1>
-        <div className="flex gap-4">
-          <Icon name="cart" size={24} />
-          <Icon name="user" size={24} />
-        </div>
-      </header>
+      <Header className="justify-between">
+        <Logo />
+        <InstagramProfile />
+      </Header>
 
       <main className="flex-1 pb-20">
         {/* Search Bar */}
@@ -26,17 +28,21 @@ export default function Home() {
         <CategoryList categories={MOCK_CATEGORIES} />
 
         {/* Product Grid (Feed) */}
-        <ProductGrid products={MOCK_PRODUCTS} />
+        {isLoading ? (
+          <div className="flex justify-center p-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-zinc-900 dark:border-white"></div>
+          </div>
+        ) : error ? (
+          <div className="p-4 text-center text-red-500">
+            <p>Error loading products: {error}</p>
+          </div>
+        ) : (
+          <ProductGrid products={products} />
+        )}
       </main>
 
       {/* Bottom Navigation (Optional but makes it look more like an app) */}
-      <nav className="fixed bottom-0 w-full max-w-md bg-white dark:bg-black border-t border-zinc-100 dark:border-zinc-900 flex justify-around py-3 px-4">
-        <Icon name="home" size={26} className="cursor-pointer" />
-        <Icon name="search" size={26} className="cursor-pointer" />
-        <Icon name="plus-square" size={26} className="cursor-pointer" />
-        <Icon name="heart" size={26} className="cursor-pointer" />
-        <Icon name="user" size={26} className="cursor-pointer" />
-      </nav>
+      <BottomNavigation />
     </div>
   </div>
   );
