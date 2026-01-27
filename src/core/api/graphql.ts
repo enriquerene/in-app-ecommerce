@@ -1,5 +1,7 @@
 export const fetchGraphQL = async <T>(query: string, variables?: Record<string, any>): Promise<T> => {
   const endpoint = process.env.NEXT_PUBLIC_WORDPRESS_URL;
+  console.log("GraphQL Endpoint:", endpoint);
+  console.log("Process env:", process.env);
   if (!endpoint) {
     throw new Error("NEXT_PUBLIC_WORDPRESS_URL is not defined");
   }
